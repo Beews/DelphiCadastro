@@ -321,6 +321,10 @@ object FCadastroProduto: TFCadastroProduto
     object abaCadastro: TTabSheet
       Caption = 'Cadastro'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         810
         454)
