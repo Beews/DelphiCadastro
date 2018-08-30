@@ -115,7 +115,8 @@ object FCadastroProduto: TFCadastroProduto
       Font.Style = []
       ParentFont = False
       OnClick = buttonCancelarClick
-      ExplicitLeft = 381
+      ExplicitLeft = 331
+      ExplicitTop = -4
     end
     object buttonPrimeiro: TSpeedButton
       Left = 406
@@ -212,7 +213,7 @@ object FCadastroProduto: TFCadastroProduto
     Top = 49
     Width = 818
     Height = 482
-    ActivePage = abaConsulta
+    ActivePage = abaCadastro
     Align = alClient
     TabOrder = 1
     OnChange = paginaControleChange
@@ -321,10 +322,6 @@ object FCadastroProduto: TFCadastroProduto
     object abaCadastro: TTabSheet
       Caption = 'Cadastro'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         810
         454)

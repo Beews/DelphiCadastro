@@ -119,8 +119,11 @@ begin
      begin
           if Application.MessageBox('Deseja realmente excluir registro selecionado ?', 'Atenção', mb_YesNo + MB_ICONQUESTION ) = IdYes then
           begin
+              FProduto.Codigo := dataModulo.cdsProdutoCODIGO.AsInteger;
               validacaoDeRegistro := FProduto.excluirProduto;
-              if validacaoDeRegistro = false then
+              if validacaoDeRegistro = true then
+                  dataModulo.cdsProduto.Refresh
+              else
                   Application.MessageBox('Ocorreu um erro ao excluir o registro', 'Atenção', MB_ICONEXCLAMATION);
           end;
      end
@@ -162,8 +165,30 @@ begin
           end;
      end;
 
-     validacaoDeRegistro := FProduto.inserirProduto;
-     if validacaoDeRegistro = false then
+     FProduto.Codigo        := dataModulo.cdsProdutoCODIGO.AsInteger;
+     FProduto.Descricao     := dataModulo.cdsProdutoDESCRICAO.AsString;
+     FProduto.CodigoBarras  := dataModulo.cdsProdutoCODIGO_BARRAS.AsInteger;
+     FProduto.UnidadeMedida := dataModulo.cdsProdutoUNIDADE_MEDIDA.AsString;
+     FProduto.PrecoCusto    := dataModulo.cdsProdutoPRECO_CUSTO.AsCurrency;
+     FProduto.PrecoVenda    := dataModulo.cdsProdutoPRECO_VENDA.AsCurrency;
+     FProduto.Estoque       := dataModulo.cdsProdutoESTOQUE.AsCurrency;
+     FProduto.Observacao    := dataModulo.cdsProdutoOBSERVACAO.AsString;
+
+     if FProduto.Status = INCLUIR then
+        validacaoDeRegistro := FProduto.inserirProduto;
+
+     if FProduto.Status = ALTERAR then
+        validacaoDeRegistro := FProduto.editarProduto;
+
+     if validacaoDeRegistro = true then
+     begin
+        dataModulo.cdsProduto.Cancel;
+        dataModulo.cdsProduto.Close;
+
+        dataModulo.cdsProduto.Open;
+        dataModulo.cdsProduto.Last;
+     end
+     else
         Abort;
 
      habilita_botao(false, NOVO);
@@ -272,18 +297,18 @@ end;
 procedure TFCadastroProduto.editarProduto;
 begin
     habilita_botao(false, ALTERAR);
-    validacaoDeRegistro := FProduto.editarProduto;
-    if validacaoDeRegistro = false then
-        Application.MessageBox('Ocorreu um erro ao editar o registro', 'Atenção', MB_ICONEXCLAMATION);
+    FProduto.Status := ALTERAR;
+    dataModulo.cdsProduto.Edit;
 end;
 
 procedure TFCadastroProduto.incluirProduto;
 begin
     habilita_botao(false, INCLUIR);
 
-    validacaoDeRegistro := FProduto.incluirProduto;
-    if validacaoDeRegistro = false then
-        Application.MessageBox('Ocorreu um erro ao incluir novo registro', 'Atenção', MB_ICONEXCLAMATION);
+    FProduto.Status := INCLUIR;
+    dataModulo.cdsProduto.Append;
+
+    dataModulo.cdsProdutoCODIGO.AsInteger := FProduto.proximoID('GEN_TBPROD_ID');
 end;
 
 procedure TFCadastroProduto.Valida_Dados;
@@ -303,6 +328,8 @@ begin
           ActiveControl := comboBoxUnidadeMedida;
           Abort;
      end;
+
+     abaCadastro.SetFocus;
 end;
 
 end.
